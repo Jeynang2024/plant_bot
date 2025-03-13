@@ -6,6 +6,7 @@ from langchain_core.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
+from bot_voice import text_to_speech_with_gtts_old
 
 
 app = FastAPI()
@@ -53,7 +54,11 @@ qa_chain=RetrievalQA.from_chain_type(
 async def query_faiss(question: str):
     response = qa_chain.invoke({'query': question}) #here calling the function from new_user_voice .this file recording the audio convertig to text nd returning the text as question
     #if only texting then only directly run this file
-    print("response:",response)
+    #print("response:",response)
+    ans=response["result"]
+    print("ans:",ans)
+    text_to_speech_with_gtts_old(input_text=ans, output_filepath="gtts_test.mp3")
+
     return {
         "answer": response["result"],
         "sources": response["source_documents"]
